@@ -12,12 +12,13 @@ def index():
 def hello():
     return 'Hello, World'
 
-@app.route('/detect-language', methods = ['POST','GET'])
+@app.route('/detect-language', methods = ['POST'])
 def detect_language():
-    sentence = request.args.get('sentence')
+    #sentence = request.args.get('sentence')
+    sentence = request.form['sentence']
     return 'The detected language is: '+sentence
-
-@app.route('/api/users')
+ 
+@app.route('/api/users', methods=['POST'])
 def get_users():
     return {
         'users': [
@@ -32,7 +33,7 @@ def get_users():
             }]
     }
 
-
+#THIS WORKS TOO: curl -X POST -H "Content-Type: application/json" -d '{"sentence":"Hello World"}' http://localhost:5000/api/test
 @app.route('/api/test', methods=['POST'])
 def post_users():
     payload = request.json
@@ -46,8 +47,27 @@ def post_users():
             }]
     }
 
+#THIS WORKS: 
 @app.route('/update', methods=['post'])
 def update_endpoint():
     payload = request.json  # payload should be {"title": "{KB title to update}", "input": "{text}"} 
     return Response(json.dumps({"status": "success"}), mimetype='application/json')
 
+ 
+@app.route('/makeprofile', methods=['post'])
+def update_endpoint():
+    payload = request.json
+    # get the industry,company,lastsales,currentprofile,addinfo values from the payload:
+    industry = payload['industry']
+    company = payload['company']
+    lastsales = payload['lastsales']
+    currentprofile = payload['currentprofile']
+    addinfo = payload['addinfo']
+    # put the industry,company,lastsales,currentprofile,addinfo values into a json response:
+    json_response = json.dumps({"industry": industry, "company": company, "lastsales": lastsales, "currentprofile": currentprofile, "addinfo": addinfo})
+    return Response(json_response, mimetype='application/json')
+
+
+
+
+    
