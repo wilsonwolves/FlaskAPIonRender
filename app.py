@@ -33,7 +33,7 @@ def build_profile(payload):
     messages = [{'role': 'system', 'content': system}]    
     #messages = [{'role': 'system', 'content': system}, {'role': 'user', 'content': query}]
     response, tokens = chatbot(messages) 
-    return json.loads(response)
+    return response
 
 
 app = Flask(__name__)
@@ -55,7 +55,8 @@ def makeprofile_endpoint():
     # addinfo = payload['addinfo']
     # put the industry,company,lastsales,currentprofile,addinfo values into a json response:
     #json_response = json.dumps({"industry": industry, "company": company, "lastsales": lastsales, "currentprofile": currentprofile, "addinfo": addinfo})
-    return Response(out, mimetype='application/json')
+    json_response = json.dumps({"industry": out})
+    return Response(json_response, mimetype='application/json')
 
 
 
