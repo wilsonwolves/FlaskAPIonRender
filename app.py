@@ -34,7 +34,7 @@ def get_users():
 
 
 @app.route('/api/test', methods=['POST'])
-def get_users():
+def post_users():
     payload = request.json
     return {
         'data': [
