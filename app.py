@@ -1,7 +1,5 @@
 #import flask
-from flask import Flask, request, jsonify
-import threading
-import json
+from flask import Flask, request 
 
 app = Flask(__name__)
 
@@ -13,7 +11,7 @@ def index():
 def hello():
     return 'Hello, World'
 
-@app.route('/detect-language')
+@app.route('/detect-language', methods = ['POST','GET'])
 def detect_language():
     sentence = request.args.get('sentence')
     return 'The detected language is: '+sentence
