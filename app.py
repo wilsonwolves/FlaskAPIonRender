@@ -1,71 +1,61 @@
 #import flask
 from flask import Flask, request, Response
 import json
+import os
+from time import time, sleep
+import openai
+openai.api_key = os.environ["OPENAI_API_KEY"]
+
+def chatbot(messages, model="gpt-3.5-turbo-0613", temperature=0):
+    max_retry = 2
+    retry = 0
+    while True:
+        try:
+            response = openai.ChatCompletion.create(model=model, messages=messages, temperature=temperature)
+            text = response['choices'][0]['message']['content']            
+            return text, response['usage']['total_tokens']
+        except Exception as oops:            
+            if 'maximum context length' in str(oops):
+                a = messages.pop(1)                
+                continue
+            retry += 1
+            if retry >= max_retry:                
+                exit(1)            
+            sleep(2 ** (retry - 1) * 5)
+
+def build_profile(payload):    
+    system = 'Write a one page profile of a company in the <<INDUSTRY>> industry. The company is called <<COMPANY>>. The company has <<LASTSALES>> in sales. The company is <<CURRENTPROFILE>>. <<ADDINFO>>'
+    system = system.replace('<<INDUSTRY>>', payload['industry'])
+    system = system.replace('<<COMPANY>>', payload['company'])
+    system = system.replace('<<LASTSALES>>', payload['lastsales'])
+    system = system.replace('<<CURRENTPROFILE>>', payload['currentprofile'])
+    system = system.replace('<<ADDINFO>>', payload['addinfo'])
+    messages = [{'role': 'system', 'content': system}]    
+    #messages = [{'role': 'system', 'content': system}, {'role': 'user', 'content': query}]
+    response, tokens = chatbot(messages) 
+    return json.loads(response)
+
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return 'Index Page'
+    return 'Gettin there!'
 
-@app.route('/hello')
-def hello():
-    return 'Hello, World'
 
-@app.route('/detect-language', methods = ['POST'])
-def detect_language():
-    #sentence = request.args.get('sentence')
-    sentence = request.form['sentence']
-    return 'The detected language is: '+sentence
- 
-@app.route('/api/users', methods=['POST'])
-def get_users():
-    return {
-        'users': [
-            {
-                'id': 1,
-                'full_name': 'John M Doe',
-                'first_name': 'John',
-                'middle_name': 'M',
-                'last_name': 'Doe',
-                'email': 'JohnDoe@email.com',
-                'status': 'active'
-            }]
-    }
-
-#THIS WORKS TOO: curl -X POST -H "Content-Type: application/json" -d '{"sentence":"Hello World"}' http://localhost:5000/api/test
-@app.route('/api/test', methods=['POST'])
-def post_users():
-    payload = request.json
-    return {
-        'data': [
-            {
-                'text': payload['sentence'],
-                'first_name': 'John',
-                'middle_name': 'M',
-                'last_name': 'Doe'
-            }]
-    }
-
-#THIS WORKS: 
-@app.route('/update', methods=['post'])
-def update_endpoint():
-    payload = request.json  # payload should be {"title": "{KB title to update}", "input": "{text}"} 
-    return Response(json.dumps({"status": "success"}), mimetype='application/json')
-
- 
 @app.route('/makeprofile', methods=['post'])
 def makeprofile_endpoint():
     payload = request.json
+    out = build_profile(payload)
     # get the industry,company,lastsales,currentprofile,addinfo values from the payload:
-    industry = payload['industry']
-    company = payload['company']
-    lastsales = payload['lastsales']
-    currentprofile = payload['currentprofile']
-    addinfo = payload['addinfo']
+    # industry = payload['industry']
+    # company = payload['company']
+    # lastsales = payload['lastsales']
+    # currentprofile = payload['currentprofile']
+    # addinfo = payload['addinfo']
     # put the industry,company,lastsales,currentprofile,addinfo values into a json response:
-    json_response = json.dumps({"industry": industry, "company": company, "lastsales": lastsales, "currentprofile": currentprofile, "addinfo": addinfo})
-    return Response(json_response, mimetype='application/json')
+    #json_response = json.dumps({"industry": industry, "company": company, "lastsales": lastsales, "currentprofile": currentprofile, "addinfo": addinfo})
+    return Response(out, mimetype='application/json')
 
 
 
