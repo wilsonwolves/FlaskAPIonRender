@@ -55,7 +55,7 @@ def update_endpoint():
 
  
 @app.route('/makeprofile', methods=['post'])
-def update_endpoint():
+def makeprofile_endpoint():
     payload = request.json
     # get the industry,company,lastsales,currentprofile,addinfo values from the payload:
     industry = payload['industry']
