@@ -15,9 +15,9 @@ import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 # instantiate ChromaDB
-persist_directory = "chromadb"
+persist_directory = "asm/data" #"chromadb"
 chroma_client = chromadb.Client(Settings(persist_directory=persist_directory,chroma_db_impl="duckdb+parquet",))
-collection = chroma_client.get_or_create_collection(name="knowledge_base")
+collection = chroma_client.get_or_create_collection(name="asm1")
 #####################################################################
 
 def save_yaml(filepath, data):
