@@ -10,6 +10,10 @@ import chromadb
 from chromadb.config import Settings
 from uuid import uuid4
 
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
 # instantiate ChromaDB
 persist_directory = "chromadb"
 chroma_client = chromadb.Client(Settings(persist_directory=persist_directory,chroma_db_impl="duckdb+parquet",))
