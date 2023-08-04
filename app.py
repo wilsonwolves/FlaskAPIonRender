@@ -6,13 +6,16 @@ from time import time, sleep
 import yaml
 import openai
 openai.api_key = os.environ["OPENAI_API_KEY"]
-import chromadb
-from chromadb.config import Settings
-from uuid import uuid4
+
 
 __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
+import chromadb
+from chromadb.config import Settings
+from uuid import uuid4
+
 
 # instantiate ChromaDB
 persist_directory = "asm/data" #"chromadb"
