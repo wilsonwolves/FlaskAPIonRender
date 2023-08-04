@@ -12,14 +12,16 @@ __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
-import chromadb
-from chromadb.config import Settings
+#import chromadb
+#from chromadb.config import Settings
 from uuid import uuid4
 
 
 # instantiate ChromaDB
 persist_directory = "asm/data" #"chromadb"
-chroma_client = chromadb.Client(Settings(persist_directory=persist_directory,chroma_db_impl="duckdb+parquet",))
+import chromadb
+chroma_client = chromadb.PersistentClient(path=persist_directory)
+#chroma_client = chromadb.Client(Settings(persist_directory=persist_directory,chroma_db_impl="duckdb+parquet",))
 collection = chroma_client.get_or_create_collection(name="asm1")
 #####################################################################
 
