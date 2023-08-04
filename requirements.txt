@@ -1,5 +1,5 @@
 Flask
 Gunicorn
 openai
-chromadb
 pysqlite3-binary
+chromadb
