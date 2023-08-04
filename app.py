@@ -76,6 +76,13 @@ def build_profile(payload):
     # test the asm/data path:
     save_file('asm/data/tmp.txt', response)    
     save_file('asm/data/log_%s_profile.txt' % time(), 'Updated document %s:\n%s' % (tokens,response))
+
+    _files = os.listdir('asm/data/') 
+    for x_file in _files:
+        # Check if the report already exists in the output folder
+        filename = 'asm/data/' + x_file
+        response += '\n\n' + filename
+
     return response
 
 
