@@ -61,10 +61,10 @@ def chatbot(messages, model="gpt-3.5-turbo-0613", temperature=0):
             sleep(2 ** (retry - 1) * 5)
 
 def build_profile(payload):    
-    system = 'Write a one page profile based on the following company details: \n\n<<PREPROFILE>> \n'
-    system = system.replace('<<PREPROFILE>>', payload['preprofile'])
+    system = 'You are a internet research specialist.  Your job is to review the company information and provide any additional information that you have about the company.  You will use the Company Name, Location, Industry and Manufacturing Process details to help you identify additional feedback about the company.  The [Product] section of the information represents products they have purchased to help inform their employees about the work the company does.  Your analysis should be thorough and comprehensive. If you do not have anything to contribute then respond with "I do not have any additional information about this company."'
+    #system = system.replace('<<PREPROFILE>>', payload['preprofile'])
     #messages = [{'role': 'system', 'content': system}]
-    messages = [{'role': 'system', 'content': system}, {'role': 'user', 'content': 'Please provide a unique one page profile from the following company information:\n\n'+payload['preprofile']}]
+    messages = [{'role': 'system', 'content': system}, {'role': 'user', 'content': payload['preprofile']}]
     response, tokens = chatbot(messages) 
     #save_file('asm/root-asm-tmp.txt', 'subfolder test')    
     #save_file('asm/data/tmp.txt', response)    
