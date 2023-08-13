@@ -62,7 +62,7 @@ def chatbot(messages, model="gpt-3.5-turbo-0613", temperature=0):
 
 
 def build_activitieslist(payload):
-    system = 'You are being provided with information about a company.  Your job is to analyze the company information and produce a list of activities the company would likely be engaged in based on the product purchases they have made.  The Products purchased are listed in the description.  You will use the Company Industry and Manufacturing Process information in your analysis as well, but match the activities to the product titles as closely as possible.  Your output should be a list of activities and nothing else.  Do not comment on the list or explain anything about the list.  Just the list.';
+    system = 'Based on the provided customer information, especially focusing on the products they have purchased and their manufacturing processes, what are some potential industry activities they might be involved in?';
     messages = [{'role': 'system', 'content': system}, {'role': 'user', 'content': payload['preprofile']}]
     response, tokens = chatbot(messages)
     save_file('asm/data/log_%s_activities.txt' % time(), 'Updated document %s:\n%s' % (tokens,response))
