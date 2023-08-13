@@ -153,7 +153,7 @@ def makeprofile_endpoint():
     # addinfo = payload['addinfo']
     # put the industry,company,lastsales,currentprofile,addinfo values into a json response:
     #json_response = json.dumps({"industry": industry, "company": company, "lastsales": lastsales, "currentprofile": currentprofile, "addinfo": addinfo})
-    json_response = json.dumps({"industry": out})
+    json_response = json.dumps({"output": out})
     return Response(json_response, mimetype='application/json')
 
 #---------------------------------------------------------------
